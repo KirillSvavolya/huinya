@@ -72,14 +72,14 @@ public class ServerField extends Field {
 	private void decrementNumberOfShips() {
 		this.numberOfShipsLeft--;
 	}
-
-	private boolean isShipDead(int i, int j) {
+// checks if the ship will be dead after this shot.
+	public boolean isShipDead(int i, int j) {
 		int counter = 0;
 		// loop through the row to the right of the ship. 
 		for (int k = j; k < board[0].length; k++) {
 			// if the cell is miss or empty before encountering 1, there is no
 			// ship continuation to the right.
-			if (board[i][k] == EMPTY_CELL && board[i][k] == MISS_CELL) {
+			if (board[i][k] == EMPTY_CELL || board[i][k] == MISS_CELL) {
 				break;
 			// The first iteration condition is always true (starting from the coordinate of the shot),
 			// thus, the counter is used.
@@ -97,7 +97,7 @@ public class ServerField extends Field {
 		for (int h = j; h >= 0; h--) {
 			// if the cell is miss or empty before encountering 1, there is no
 			// ship continuation to the left.
-			if (board[i][h] == EMPTY_CELL && board[i][h] == MISS_CELL) {
+			if (board[i][h] == EMPTY_CELL || board[i][h] == MISS_CELL) {
 				break;
 			// The first iteration condition is always true (starting from the coordinate of the shot),
 			// thus, the counter is used.

@@ -176,12 +176,12 @@ public class TestLocalField {
 		board = field.getBoard();
 		int[] result;
 		String toBreak = "";
-		for(int i = 0; i < board.length; i++) {
+		for(int i = 1; i < board.length + 1; i++) {
 			for (int j = 0; j < letters.length; j++) {
 				toBreak = String.format("%d%s", i, letters[j]);
 				try {
 					result = field.breakCoordinates(toBreak);
-					assertArrayEquals(new int[] {i, j}, result);
+					assertArrayEquals(new int[] {i - 1, j}, result);
 				} catch (IllegalCoordinateException e) {
 					e.printStackTrace();
 				}
