@@ -6,9 +6,8 @@ import java.util.Random;
 
 import model.ExceptionCollections.IllegalCoordinateException;
 
-public class LocalField implements Field {
+public class LocalField extends Field {
 	// variables to initialise a field, and test it.
-	private int[][] board;
 	private ArrayList<Integer> array; // is required to pick a random ship from the list
 	// as it is necessary to remove an element from the array if it was picked.
 	public static int[] ships = {
@@ -22,34 +21,15 @@ public class LocalField implements Field {
  * @ensures getBoard() == new int[10][15].
  */
 	public LocalField() {
+		super();
 		this.array = new ArrayList<Integer>();
-		this.board = new int[10][15];
 	}
 	
 	// for test purposes.
 	public int getNumOfCellsRequired() {
 		return numOfCellsRequired;
 	}
-	
-	// getter for int[][] representation of the board.
-/**
- * Returns two dimensional board.
- * @return board with the current representation of the game.
- */
-	public int[][] getBoard() {
-		return board;
-	}
-	
-	// String representation - for test purposes.
-	@Override
-	public String toString() {
-		StringBuilder str = new StringBuilder();
-		for (int i = 0; i < board.length; i++) {
-			str.append(Arrays.toString(board[i]));
-			str.append("\n");
-		}
-		return str.toString();
-	}
+
 	
 /**
  * Places ships randomly on the field. 
@@ -205,54 +185,6 @@ public class LocalField implements Field {
 	private void fillArrayList() {
 		for(int elem: ships) {
 			array.add(elem);
-		}
-	}
-	
-	// Method to indicate a shot.
-/**
- * @requires coordinate == "[0-9]" + "[A-O]".
- * @param coordinate of the shot in string.
- * @param state result of the shot in Enum format (hit||killed||miss).
- * @throws IllegalCoordinateException if the coordinate provided does not respect the preconditions.
- */
-	public void shoot(String coordinate, ShotState state) throws IllegalCoordinateException {
-		int[] res = breakCoordinates(coordinate);
-		int i = res[0];
-		int j = res[1];
-		switch (state) {
-		case MISS: {
-			this.board[i][j] = MISS_CELL;
-			break;
-		}
-		case HIT: {
-			this.board[i][j] = DEAD_CELL;
-			break;
-		}
-		case KILLED: {
-			this.board[i][j] = DEAD_CELL;
-			markRightLeftAsShot(i, j);
-			break;
-		}
-		}
-	}
-	// As the ships cannot be in the adjacent cells, when the ship is destroyed,
-	// one cell from right and one from left is marked as shot.
-	private void markRightLeftAsShot(int i, int j) {
-		// check cells from right.
-		for (int k = j; k < 15; k++) {
-			// miss cell is marked as 3, thus, the check can start from j coordinate (which was changed to hit before
-			// the method was invoked. It allows to exclude checks required if taking j = j + 1 || j = j - 1.
-			if (this.board[i][k] == 0) {
-				this.board[i][k] = MISS_CELL;
-				break;
-			}
-		}
-		// check cells from left.
-		for (int k = j; k >= 0; k--) {
-			if (this.board[i][k] == 0) {
-				this.board[i][k] = MISS_CELL;
-				break;
-			}
 		}
 	}
 }
