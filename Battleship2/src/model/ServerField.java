@@ -55,6 +55,8 @@ public class ServerField extends Field {
 				markTheCell(ShotState.KILLED, i, j);
 				// if the shot is a kill, one is added to the score.
 				incrementScore();
+				// decrement the number of ships on the field.
+				decrementNumberOfShips();
 				return ShotState.KILLED;
 			} else {
 				// if the ship is still alive - then the shot is a hit.
@@ -65,6 +67,10 @@ public class ServerField extends Field {
 			String text = "precondition violated: The cell must to be empty or taken by the ship";
 			throw new IllegalCoordinateException(text);
 		}
+	}
+	
+	private void decrementNumberOfShips() {
+		this.numberOfShipsLeft--;
 	}
 
 	private boolean isShipDead(int i, int j) {
@@ -108,15 +114,13 @@ public class ServerField extends Field {
 	}
 	
 /**
- * Checks whether the game is over. The game can be over either when: all of the 
- * ships which belong to one board is 0, or the timer has ended.
- * @return
+ * Checks whether there are ships left on the board.
+ * @return boolean indicating if there are alive ships on the board.
  */
-	private boolean isGameOver() {
+	private boolean areShipsLeft() {
 		if (this.numberOfShipsLeft == 0) {
-			return true;
+			return false;
 		}
-		// NOTE: ADD TIMER CONDITION HERE.
-		return false;
+		return true;
 	}
 }
