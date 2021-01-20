@@ -169,26 +169,6 @@ public class TestLocalField {
 		return list;
 	}
 	
-	// Test if the method which translates String of coordinates into indices works.
-	@Test
-	public void testCoordinateSeparation() {
-		field.placeShips();
-		board = field.getBoard();
-		int[] result;
-		String toBreak = "";
-		for(int i = 1; i < board.length + 1; i++) {
-			for (int j = 0; j < letters.length; j++) {
-				toBreak = String.format("%d%s", i, letters[j]);
-				try {
-					result = field.breakCoordinates(toBreak);
-					assertArrayEquals(new int[] {i - 1, j}, result);
-				} catch (IllegalCoordinateException e) {
-					e.printStackTrace();
-				}
-				
-			}
-		}
-	}
 	
 	@Test
 	public void testShooting() {

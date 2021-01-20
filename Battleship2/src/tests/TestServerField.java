@@ -71,19 +71,19 @@ class TestServerField {
 	@Test
 	void testGettingResultOfTheShotAndAppropriateChangesToTheBoard() throws IllegalCoordinateException {
 		// test for hit
-		ShotState state = field.getResultOfTheShot("1A");
+		ShotState state = field.getResultOfTheShot(0, 0);
 		// test for score increment.
 		assertEquals(1, field.getScore());
 		assertEquals(Field.DEAD_CELL, field.getBoard()[0][0]);
 		assertEquals(ShotState.HIT, state);
 		// Test for miss
-		state = field.getResultOfTheShot("1F");
+		state = field.getResultOfTheShot(0, 5);
 		assertEquals(ShotState.MISS, state);
 		// test for kill
-		state = field.getResultOfTheShot("1B");
-		state = field.getResultOfTheShot("1C");
-		state = field.getResultOfTheShot("1D");
-		state = field.getResultOfTheShot("1E");
+		state = field.getResultOfTheShot(0, 1);
+		state = field.getResultOfTheShot(0, 2);
+		state = field.getResultOfTheShot(0, 3);
+		state = field.getResultOfTheShot(0, 4);
 		assertEquals(ShotState.KILLED, state);
 		// test the score increment.
 		assertEquals(6, field.getScore());
@@ -100,7 +100,7 @@ class TestServerField {
 		assertEquals(1, num);
 
 		// test if the the cells are marked after the kill.
-		state = field.getResultOfTheShot("6C");
+		state = field.getResultOfTheShot(5, 2);
 		assertEquals(ShotState.KILLED, state);
 		assertEquals(Field.MISS_CELL, field.getBoard()[5][1]);
 		assertEquals(Field.MISS_CELL, field.getBoard()[5][3]);

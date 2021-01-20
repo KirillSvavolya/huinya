@@ -15,8 +15,6 @@ public abstract class Field {
 	public static final int MISS_CELL = 3;
 	private static final int V_DIM = 10;
 	private static final int H_DIM = 15;
-	public static int AAscii = 65;
-	public static int OAscii = 79;
 	protected int[][] board;
 	private int score;
 	
@@ -101,40 +99,6 @@ public abstract class Field {
 		}
 	}
 
-	
-/**
- * Translates coordinate from string to indices.
- * @requires coordinate == "[1-10]" + "[A-O]".
- * @param coordinate to translate.
- * @return array with two integers representing indices of the given coordinate in the two dimensional array.
- * @throws IllegalCoordinateException if the coordinate given does not respect the preconditions.
- */
-	public int[] breakCoordinates(String coordinate) throws IllegalCoordinateException {
-			int[] res = new int[2];
-			try {
-				int vertical;
-				char horizontal;
-				// case with 10
-				if (coordinate.length() == 3) {
-					vertical = Integer.parseInt(coordinate.substring(0, 2)) - 1;
-					horizontal = coordinate.charAt(2);
-				} else {
-					vertical = Integer.parseInt("" + coordinate.charAt(0)) - 1;
-					horizontal = coordinate.charAt(1);
-				}
-				int ascii = (int) horizontal;
-				if (ascii > OAscii && ascii < AAscii && vertical < 0 && vertical > 9) {
-					throw new IllegalCoordinateException();
-				}
-				ascii = ascii - AAscii;
-				res[0] = vertical;
-				res[1] = ascii;
-			} catch (NumberFormatException e) {
-				throw new IllegalCoordinateException("The first part of the coordinate should be an integer");
-			}
-			return res;
-		}
-	
 	// getter for int[][] representation of the board.
 /**
  * Returns two dimensional board.

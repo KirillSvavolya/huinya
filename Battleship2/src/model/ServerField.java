@@ -28,15 +28,13 @@ public class ServerField extends Field {
 /**
  * Checks the result of the shot, adjusts the board stored on the server accordingly and returns
  * the result for further processing.
- * @requires coordinate == "[A-O] + [1-9]".
+ * @requires i == [0-9], j = [0-9].
  * @requires board[coordinate1][coordinate2] = 1 || 0. (The cell was not marked as dead or missed).
- * @ensures coordinate given by the string is checked, and the result of the shot is returned.
- * @param coordinate
+ * @ensures coordinate given by two integers is checked, and the result of the shot is returned.
+ * @param i - vertical coordinate.
+ * @param j - horizontal coordinate.
  */
-	public ShotState getResultOfTheShot(String coordinate) throws IllegalCoordinateException {
-		int[] index = breakCoordinates(coordinate);
-		int i = index[0];
-		int j = index[1];
+	public ShotState getResultOfTheShot(int i, int j) throws IllegalCoordinateException {
 		// check the status of the cell.
 		if (this.board[i][j] == EMPTY_CELL) {
 			// if the cell is empty - then the shot missed. Thus, the cell is marked as miss and the
