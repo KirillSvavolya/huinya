@@ -23,7 +23,7 @@ public class GuiController implements BattleshipGuiDelegate {
  
 	
 	private GuiController() {	
-		this.player = new Client();
+		this.player = new Client(playerField);
 	}
 	
 	@Override
