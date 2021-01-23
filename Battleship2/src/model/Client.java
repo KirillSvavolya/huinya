@@ -15,6 +15,7 @@ public class Client {
 	private Timer timer = new Timer();
 	private int[] lastLeftRightH = {-1,-1,-1,-1};
 	private int[] lastLeftRightC = {-1,-1,-1,-1};
+	private ShotState lastShotState;
 	
 	
 
@@ -27,9 +28,12 @@ public Client() {
 
 public void makeTurn(int i, int j) throws IllegalCoordinateException {
 	int[] coor = {i,j};
-	ShotState shot = battle.gumanTurnResult(coor); //make shot and get the result back
+	this.lastShotState = battle.gumanTurnResult(coor); //make shot and get the result back
 
-	this.lastLeftRightH = enemyField.markTheCell(shot, i, j);
+	this.lastLeftRightH = enemyField.markTheCell(this.lastShotState, i, j);
+}
+public ShotState getShotFeedback() {
+	return this.lastShotState;
 }
 
 public int[] recieveTurn() throws IllegalCoordinateException {
