@@ -56,7 +56,8 @@ public abstract class Field {
  * @param i - vertical coordinate of the cell.
  * @param j - horizontal coordinate of the cell.
  */
-	public void markTheCell(ShotState state, int i, int j) {
+	public int[] markTheCell(ShotState state, int i, int j) {
+		int[] leftRight = {-1,-1,-1,-1};
 		switch (state) {
 		case HIT:{
 			board[i][j] = DEAD_CELL;
@@ -68,21 +69,29 @@ public abstract class Field {
 		}
 		case KILLED:{
 			board[i][j] = DEAD_CELL;
-			markRightLeftAsShot(i, j);
+			leftRight = markRightLeftAsShot(i, j);
 			break;
 		}
 		}
+		return leftRight;
 	}
 
 	// As the ships cannot be in the adjacent cells, when the ship is destroyed,
 	// one cell from right and one from left is marked as shot.
-	private void markRightLeftAsShot(int i, int j) {
+	private int[] markRightLeftAsShot(int i, int j) {
+		int[] leftRight = new int[4];
+		leftRight[0]=-1;
+		leftRight[1]=-1;
+		leftRight[2]=-1;
+		leftRight[3]=-1;
 		// check cells from right.
 		for (int k = j; k < 15; k++) {
 			// miss cell is marked as 3, thus, the check can start from j coordinate (which was changed to hit before
 			// the method was invoked. It allows to exclude checks required if taking j = j + 1 || j = j - 1.
 			if (this.board[i][k] == 0) {
 				this.board[i][k] = MISS_CELL;
+				leftRight[0] = i;
+				leftRight[1] = k;
 				break;
 			} else if (this.board[i][k] == MISS_CELL) {
 				break;
@@ -92,11 +101,14 @@ public abstract class Field {
 		for (int k = j; k >= 0; k--) {
 			if (this.board[i][k] == 0) {
 				this.board[i][k] = MISS_CELL;
+				leftRight[2] = i;
+				leftRight[3] = k;
 				break;
 			} else if (this.board[i][k] == MISS_CELL) {
 				break;
 			}
 		}
+		return leftRight;
 	}
 
 	// getter for int[][] representation of the board.

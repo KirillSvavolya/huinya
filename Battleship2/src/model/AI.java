@@ -2,94 +2,73 @@ package model;
 
 public class AI {
 
-	public int[] firstturn = new int[2];
-	public OpponentField enemyField;
-	public LocalField ownField;
+	
+	private OpponentField enemyField;
+	private LocalField ownField;
+	private int[] lastBotTurn = new int[2];
+	private boolean first = true;
 	
 // intialiazes its own field, creates empty enemy field
 public AI() {
 	this.ownField = new LocalField();
 	this.ownField.placeShips();
 	this.enemyField= new OpponentField();
-	this.firstturn[0] = (int) (Math.random() *10);
-	this.firstturn[1] = (int) (Math.random() *15);
+
 }
-
-
-
 //returns to computer the result of the latest shot and gets back new shot
-public int[] computerTurn(ShotState shot, int i, int j) {
-	
-	
-	this.enemyField.markTheCell(shot, i, j); //first computer updates enemy field and then uses it to calculate its next shot
-	
+public int[] computerTurn(ShotState shot) {	
+	this.enemyField.markTheCell(shot, lastBotTurn[0], lastBotTurn[1]); //first computer updates enemy field and then uses it to calculate its next shot
+	if (first) {
+		int[] firstTurn = new int[2];
+		firstTurn[0] = (int) (Math.random() *10);
+		firstTurn[1] = (int) (Math.random() *15);
+		return firstTurn;
+	}
+	else {
 	switch (shot) {
 	case MISS: 
 		return fireRandomShot();
 	case HIT: 
-		return fireRepeatedShot(i ,j);
-	default: 							//it's case KILLED namely
+		return fireRepeatedShot(lastBotTurn[0], lastBotTurn[1]);
+	default: 													//it's case KILLED namely
 		return fireRandomShot();
+	}	
 	}
-	
-	
 }
-
 // gives to game its field
 public int[][] getField() {
 	return ownField.getBoard();
 }
-
-
-
-
-
 // first chooses a random cell to fire, if it's taken then goes further and checks every cell
 // shoots with 50/50 chance
 // if face end, then repeats
-private int[] fireRandomShot() {
- 
-
-    int[] shot = new int[2];
+private int[] fireRandomShot() {  
     boolean found = false;
-    
     while (found == false) {   			// we run this while loop until we fire a shot. 
-    	
         int i = (int) (Math.random() *10); //this is a random point from where we start firing
         int j = (int) (Math.random() *15);
-        
     for (int k=i; k<10; k++) { 		// if after first loop we don't fire a shot (all cells are taken) then we start again with another random point
     	for (int s=j; s<15; s++) {
     		if ( (found == false) && (enemyField.getBoard()[k][s]==0) ) {
     			
-    				shot[0] = k;
-    				shot[1] = s;
+    			lastBotTurn[0] = k;
+    			lastBotTurn[1] = s;
     				found = true;
     			}
     		}
     	} 		
-    
-
     }
-
-    return shot; 
+    return lastBotTurn; 
 	}   
 
-
-// we need to check on the right and on the left for empty spaces
-// first we go to the right and make a shot if we see empty cell
-// if no then left side algorithm starts
 private int[] fireRepeatedShot( int i, int j) {
-	int[] backshot= new int[2];
 	boolean choice = Math.random() < 0.5; //randomly claculates the direction of checking
 	boolean found = false;
-	
-	
 	   	if (choice) {						//if true - we check on right. OTherwise - on left
 	    	for (int s=j; s<15; s++) { 
 	    		if (enemyField.getBoard()[i][s]==0 && (found == false) ) {
-	    			backshot[0]=i;
-    				backshot[1]=s;
+	    			lastBotTurn[0]=i;
+	    			lastBotTurn[1]=s;
     				found = true;
     				
 	    		}
@@ -97,16 +76,20 @@ private int[] fireRepeatedShot( int i, int j) {
 	   	}
 	   	else {	for (int s=j; s>-1; s--) {
 	    		if (enemyField.getBoard()[i][s]==0 && (found == false) ) {
-	    			backshot[0]=i;
-    				backshot[1]=s;
+	    			lastBotTurn[0]=i;
+	    			lastBotTurn[1]=s;
     				found = true;
     				
 	    		}
 	    	}
 	   	}
-	  
-	return backshot; 
+	return lastBotTurn; 
 	}
+}
+// we need to check on the right and on the left for empty spaces
+// first we go to the right and make a shot if we see empty cell
+// if no then left side algorithm starts
+
 /*
 public static void main(String [] args) {
 	AI bot = new AI();
@@ -133,7 +116,7 @@ public static void main(String [] args) {
 	
 }
 */
-	}
+	
 
 
 /*private int[] CheckRightLeftAsShot(int i, int j) {

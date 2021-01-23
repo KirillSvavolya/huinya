@@ -13,15 +13,52 @@ public class Client {
 	private LocalField ownField;
 	private Game battle;
 	private Timer timer = new Timer();
-	public boolean go = true;
+	private int[] lastLeftRightH = {-1,-1,-1,-1};
+	private int[] lastLeftRightC = {-1,-1,-1,-1};
 	
-// intialiazes its own field, creates empty enemy field
+	
+
 public Client() {
-	this.ownField = new LocalField();
-	this.ownField.placeShips();
-	this.enemyField= new OpponentField();
-	this.battle = new Game(ownField.getBoard());
+	this.ownField = new LocalField(); //create a new field
+	this.ownField.placeShips(); //place ships on this field
+	this.enemyField= new OpponentField(); // create empty enemy field
+	this.battle = new Game(ownField.getBoard()); // create new Game and give own board to it
 }
+
+public void makeTurn(int i, int j) throws IllegalCoordinateException {
+	int[] coor = {i,j};
+	ShotState shot = battle.gumanTurnResult(coor); //make shot and get the result back
+
+	this.lastLeftRightH = enemyField.markTheCell(shot, i, j);
+}
+
+public int[] recieveTurn() throws IllegalCoordinateException {
+	int[] botTurn;		
+	botTurn = battle.getComputerTurn();
+	
+	this.lastLeftRightC = ownField.markTheCell(recieveBotShotState(), botTurn[0], botTurn[1]);
+	return botTurn;
+}
+public ShotState recieveBotShotState() throws IllegalCoordinateException{
+	return battle.getBotShotState();
+}
+
+public int[] getLastLeftRightH() {
+	return this.lastLeftRightH;
+}
+
+public int[] getLastLeftRightC() {
+	return this.lastLeftRightC;
+}
+
+}
+
+
+
+
+
+
+
 
 /*private void timerGame() { // timer needs to be moved out of here so it can be stopped
 	TimerTask task = new TimerTask() {
@@ -62,39 +99,6 @@ private void timerTurn() {
     timer.schedule(task, delay);
 }*/
 
-public void makeTurn(int[] coor) throws IllegalCoordinateException {
-	
-	ShotState shot = battle.countTurn(coor); //make shot and get the result back
-	
-	if (coor[0] != 20) {
-	enemyField.markTheCell(shot, coor[0], coor[1]);
-	}
-	
-	receiveTurn();
-}
-
-private void receiveTurn() throws IllegalCoordinateException {
-	int[] botturn;	
-	
-	botturn = battle.getComputerTurn();
-	ShotState botshot = battle.getShotState();
-	ownField.markTheCell(botshot, botturn[0], botturn[1]);
-//	timerTurn();
-	System.out.println("Bot made turn - " + botturn[0] + " " + botturn[1]);
-	
-}
-
-public int[][] getOwnField(){
-	return this.ownField.getBoard();
-}
-
-public int[][] getEnemyField(){
-	return this.enemyField.getBoard();
-}
-
-public int[][] getFullEnemyField(){
-	return battle.getBotfield();
-}
 
 
 
@@ -154,4 +158,3 @@ public static void main(String [] args) throws IllegalCoordinateException {
 }*/
 
 
-}
