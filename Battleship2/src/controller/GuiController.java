@@ -3,6 +3,7 @@ package controller;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import model.Client;
 import model.Field;
 import model.LocalField;
 import model.ShotState;
@@ -100,10 +101,10 @@ public class GuiController implements BattleshipGuiDelegate {
 			
 			if (shot == ShotState.KILLED) { //if we killed it then we need to mark the cells on the left and right of the ship
 				if (player.getLastLeftRightH()[0] != -1) {
-					paintOpponentCell(player.getLastLeftRightH()[0], player.getLastLeftRightH()[1], ShotState.MISS)
+					paintOpponentCell(player.getLastLeftRightH()[0], player.getLastLeftRightH()[1], ShotState.MISS);
 				}
 				if (player.getLastLeftRightH()[2] != -1) {
-					paintOpponentCell(player.getLastLeftRightH()[2], player.getLastLeftRightH()[3], ShotState.MISS)
+					paintOpponentCell(player.getLastLeftRightH()[2], player.getLastLeftRightH()[3], ShotState.MISS);
 				}
 			}
 			
@@ -122,13 +123,13 @@ public class GuiController implements BattleshipGuiDelegate {
 
 	
 	private void receiveAndPaintBotTurn()throws IllegalCoordinateException {
-		int[] botTurn = int[2];
+		int[] botTurn = new int[2];
 		ShotState botTurnState;
 		if (isWithServer == false) { //gets bot's turn if play against bot
 			botIsShooting = true;
-			while (botTurnState != MISS) {
-			botTurn = recieveTurn();
-			botTurnState = recieveBotShotState();
+			while (botTurnState != ShotState.MISS) {
+			botTurn = player.recieveTurn();
+			botTurnState = player.recieveBotShotState();
 			paintPlayerCell(botTurn[0], botTurn[1], botTurnState);
 			}
 			botIsShooting = false;
