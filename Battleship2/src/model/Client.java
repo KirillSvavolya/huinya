@@ -19,9 +19,8 @@ public class Client {
 	
 	
 
-public Client() {
-	this.ownField = new LocalField(); //create a new field
-	this.ownField.placeShips(); //place ships on this field
+public Client(LocalField field) {
+	this.ownField = field; //create a new field
 	this.enemyField= new OpponentField(); // create empty enemy field
 	this.battle = new Game(ownField.getBoard()); // create new Game and give own board to it
 }
