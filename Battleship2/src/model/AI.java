@@ -6,7 +6,7 @@ public class AI {
 	OpponentField enemyField;
 	LocalField ownField;
 	
-// intialiazes its own field, creates empty enemy field
+// initialises its own field, creates empty enemy field
 public AI() {
 	this.ownField = new LocalField();
 	this.ownField.placeShips();
@@ -96,6 +96,6 @@ private int[] fireRepeatedShot( int i, int j) {
 	    	}
 	  
 	return backshot; //this shoudn't work
-}
+	}
 
 }
