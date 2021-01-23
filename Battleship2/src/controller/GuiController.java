@@ -6,6 +6,7 @@ import javafx.scene.shape.Circle;
 import model.Field;
 import model.LocalField;
 import model.ShotState;
+import model.ExceptionCollections.IllegalCoordinateException;
 import view.BattleshipGui;
 
 public class GuiController implements BattleshipGuiDelegate {
@@ -14,7 +15,14 @@ public class GuiController implements BattleshipGuiDelegate {
 	// Implementation of Singleton pattern.
 	public static BattleshipGuiDelegate sharedInstance = new GuiController();
 	private LocalField playerField;
+	private Client player;
+	private boolean isWithServer = false;
+	private boolean botIsShooting = false;
+	
+ 
+	
 	private GuiController() {	
+		this.player = new Client();
 	}
 	
 	@Override
@@ -84,13 +92,47 @@ public class GuiController implements BattleshipGuiDelegate {
 	public void fireMissile(int i, int j) {
 		System.out.println(i + " " + j);
 		// ADD CONDITION IF THE TURN IS MADE (IT IS PLAYER TURN AND THE GAME IS NOT OVER YET).
-		if (true) {
+		if (botIsShooting == false /*&& timer.working*/) { 
+			player.makeTurn(i,j);
+			
+			ShotState shot = player.getShotFeedback();
+			paintOpponentCell(i, j, shot);
+			
+			if (shot == ShotState.KILLED) { //if we killed it then we need to mark the cells on the left and right of the ship
+				if (player.getLastLeftRightH()[0] != -1) {
+					paintOpponentCell(player.getLastLeftRightH()[0], player.getLastLeftRightH()[1], ShotState.MISS)
+				}
+				if (player.getLastLeftRightH()[2] != -1) {
+					paintOpponentCell(player.getLastLeftRightH()[2], player.getLastLeftRightH()[3], ShotState.MISS)
+				}
+			}
+			
 			// EVERYTHING AFTER SUCCESSFUL TURN GOES HERE.
 			// DISABLES THE CELL FOR THE SECOND CLICK.
-			paintOpponentCell(i, j, ShotState.MISS);
+			
 			this.view.getOpponentGrid().getCustomRect(i, j).setDisable(true);
 			//WAITING COLOR CAN BE ADDED HERE.
+			if(shot == ShotState.MISS) {
+				receiveAndPaintBotTurn();
+			}
 		}
+
+		
+	}
+
+	
+	private void receiveAndPaintBotTurn()throws IllegalCoordinateException {
+		int[] botTurn = int[2];
+		ShotState botTurnState;
+		if (isWithServer == false) { //gets bot's turn if play against bot
+			botIsShooting = true;
+			while (botTurnState != MISS) {
+			botTurn = recieveTurn();
+			botTurnState = recieveBotShotState();
+			paintPlayerCell(botTurn[0], botTurn[1], botTurnState);
+			}
+			botIsShooting = false;
+		}	
 	}
 
 	@Override
@@ -123,6 +165,10 @@ public class GuiController implements BattleshipGuiDelegate {
 			Circle cr = new Circle(rect.getWidth() / 2, rect.getHeight() / 2, 3, Paint.valueOf(BattleshipGui.DOT_HEX_COLOR));
 			rect.getChildren().add(cr);
 		}
+	}
+	private void setIsWithServer() {
+		this.isWithServer = true;
+		
 	}
 
 }
