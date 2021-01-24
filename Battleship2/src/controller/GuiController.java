@@ -127,7 +127,8 @@ public class GuiController implements BattleshipGuiDelegate {
             }
             paintOpponentCell(i, j, shot);
             this.view.getOpponentGrid().getCustomRect(i, j).setDisable(true);
-
+            
+            
             if (shot == ShotState.KILLED) { //if we killed it then we need to mark the cells on the left and right of the ship
                 if (player.getLastLeftRightH()[0] != -1) {
                     paintOpponentCell(player.getLastLeftRightH()[0], player.getLastLeftRightH()[1], ShotState.MISS);
@@ -137,6 +138,12 @@ public class GuiController implements BattleshipGuiDelegate {
                     paintOpponentCell(player.getLastLeftRightH()[2], player.getLastLeftRightH()[3], ShotState.MISS);
                     this.view.getOpponentGrid().getCustomRect(player.getLastLeftRightH()[2], player.getLastLeftRightH()[3]).setDisable(true);
                 }
+                switch(player.isGameEnd()) {
+            	case LOSE:
+            		endGameScreen(player.isGameEnd());
+            	case WIN_SCORE:
+            		endGameScreen(player.isGameEnd());
+            }
             }
 
             // EVERYTHING AFTER SUCCESSFUL TURN GOES HERE.
@@ -186,6 +193,12 @@ public class GuiController implements BattleshipGuiDelegate {
             botTurn = player.recieveTurn();
             botTurnState = player.recieveBotShotState();
             paintPlayerCell(botTurn[0], botTurn[1], botTurnState);
+            switch(player.isGameEnd()) {
+        	case LOSE:
+        		endGameScreen(player.isGameEnd());
+        	case WIN_SCORE:
+        		endGameScreen(player.isGameEnd());
+        }
             }
             botIsShooting = false;
         }
