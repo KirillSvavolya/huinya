@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import model.ExceptionCollections.IllegalCoordinateException;
+import view.Result;
 
 public class Client {
 
@@ -46,6 +47,11 @@ public ShotState recieveBotShotState() throws IllegalCoordinateException{
 
 public int[] getLastLeftRightH() {
 	return this.lastLeftRightH;
+}
+
+public Result isGameEnd() {
+	return battle.isGameEnd();
+	
 }
 
 

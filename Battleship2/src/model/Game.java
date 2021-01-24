@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import model.ExceptionCollections.IllegalCoordinateException;
+import view.Result;
 
 public class Game {
 
@@ -37,9 +38,14 @@ public class Game {
 	public ShotState getBotShotState() throws IllegalCoordinateException {
 		return this.botShotResult;
 	}
-	
-
-	
-
-	//public void analyseString(){} needs to be implemented for server
+	public Result isGameEnd() {
+		Result gameResult = Result.WIN_WALKOVER;
+		if (botField.numberOfShipsLeft() == 0) {
+			gameResult = Result.WIN_SCORE;
+		}
+		else if (humanField.numberOfShipsLeft() == 0) {
+			gameResult = Result.LOSE;
+		}
+		return gameResult;
+	}
 }
